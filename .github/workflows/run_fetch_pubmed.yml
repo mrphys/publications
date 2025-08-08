@@ -27,8 +27,8 @@ jobs:
 
       - name: Run fetch script
         run: |
-          chmod +x run_pubmed.sh
-          ./run_pubmed.sh
+          chmod +x create_pubs.sh
+          ./create_pubs.sh
 
       - name: Commit and push updated data
         run: |
