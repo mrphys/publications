@@ -536,11 +536,11 @@ footer {
     }
 
     h1 {
-      margin-top: 20px;
-      font-size: 50px;
+      margin-top: 40px;
+      font-size: 30px;
 
       @media only screen and (min-width: 768px) {
-         font-size: clamp(40px, 8vw, 80px);
+         font-size: clamp(30px, 8vw, 60px);
       }
     }
 
