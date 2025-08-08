@@ -1,0 +1,28 @@
+baseURL:  https://ti-yao.github.io/publications/ #http://localhost:1313/test #
+title: "Institute of Cardiovascular Science"
+# relativeURLs: true
+
+menu:
+  main:
+    - identifier: translational
+      name: Translational Cardiovascular Imaging 
+      url: /translational/
+      weight: 10
+    - identifier: engineering
+      name: Clinical Cardiovascular Engineering 
+      url: /engineering/
+      weight: 20    
+    - identifier: morphology
+      name: Morphology and Structural Heart Disease 
+      url: /morphology/
+      weight: 40
+
+params:
+  description: 
+  img_home: img/publications.jpg
+  img_404: img/404.jpg
+  sponsors: [img/sponsors/ucl.png, img/sponsors/bhf.png, img/sponsors/gosh.png, img/sponsors/royalfree.png]
+  email: rmhitly@ucl.ac.uk
+  social:
+    github:
+---

@@ -1,0 +1,34 @@
+// Mixins
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?famiy=Barlow+Semi+Condensed&family=Fira+Sans+Condensed&family=Oswald&family=Roboto+Condensed&family=Saira+Semi+Condensed&family=Work+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&family=Oswald&family=Roboto&family=Roboto+Slab&family=Source+Sans+Pro&display=swap');
+@mixin transition-all() {
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
+@mixin background-cover() {
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+@mixin monospace() {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+@mixin serif() {
+	font-family: 'Lora', 'Times New Roman', serif;
+}
+
+@mixin title(){
+    font-family: 'Roboto', sans-serif;
+}
+
+@mixin sans-serif() {
+	font-family: 'Open Sans',  sans-serif;
+	line-height: 1.7;
+}

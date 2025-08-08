@@ -1,0 +1,54 @@
+{{ define "container" }}
+<div class="container">
+  <div class="row">
+
+    <!-- publications -->
+    <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 pubs-container">
+      {{ $pubs := getJSON .Params.file }}
+
+      {{ $maxYear := 0 }}
+      {{ $minYear := 2010 }}
+
+      {{ range $pubs }}
+        {{ $year := int .Year }}
+        {{ if gt $year $maxYear }}
+          {{ $maxYear = $year }}
+        {{ end }}
+        {{ if lt $year $minYear }}
+          {{ $minYear = $year }}
+        {{ end }}
+      {{ end }}
+
+      {{ range $year := seq $maxYear -1 $minYear }}
+        <h3 id="{{ $year }}">{{ $year }}</h3>
+        <hr class="smallcolor">
+
+        {{ range $pubs }}
+          {{ if in (slice "Article" "Review" "Editorial" "Book Chapter" "Conference Paper") .DocumentType }}
+            {{ if eq $year (int .Year) }}
+              <h3><a href="https://doi.org/{{ .DOI }}" target="_blank">{{ .Title }}</a></h3>
+              <p>{{ .Authors }}</p>
+              <p><strong><i>{{ .Journal }}, {{ .Year }}</i></strong></p>
+              <br/>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+
+      {{ end }}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-1 col-lg-offset-1 col-md-1 col-md-offset-1 col-sm-1 col-sm-offset-1 col-xs-1 col-xs-offset-0 sidebar-container">
+      <div>
+        {{ range $year := seq $maxYear -1 $minYear }}
+          <h5><a href="#{{ $year }}">{{ $year }}</a></h5>
+        {{ end }}
+      </div>
+      <div class="container-top">
+        <a href="#" class="backtotop"></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{{ end }}

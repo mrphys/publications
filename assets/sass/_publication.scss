@@ -1,0 +1,151 @@
+@import "variables.scss";
+@import "_mixins.scss";
+
+// Sidebar Components
+
+// Large Screen
+@media (min-width: 1200px) {
+  .post-container,
+  .sidebar-container {
+    padding-right: 5%;
+    height:100%;
+    padding-top: 0px;
+    // padding-top: 50px;
+  }
+}
+@media (min-width: 768px) {
+  .post-container,.sidebar-container {
+    padding-right: 5%;
+    padding-top: 0px;
+    // padding-top: 30px;
+    height:100%;
+  }
+}
+@media (min-width: 992px) {
+  .sidebar-container {
+    // padding-top: 50px;
+    padding-top: 0px;
+    height:100%;
+
+    // margin-top: 80px;
+  }
+}
+
+// back to top button
+.container-top {
+  display: flex;
+  align-items: flex-end;
+  width: clamp(45px, 100%, 50px);
+  margin:0 auto;
+
+
+.backtotop {
+  position: sticky;
+  bottom: 0px;      
+  
+  /* visual styling */
+  width:100%;
+  aspect-ratio:1;
+  background:$brand-primary;
+  border-radius:20px;
+  text-align: center;
+  }
+}
+.backtotop:before {
+  content:"";
+  position:absolute;
+  inset:30%;
+  transform:translateY(20%) rotate(-45deg);
+  border-top:5px solid $offwhite;
+  border-right:5px solid $offwhite
+}
+
+// Container of Sidebar, also Friends
+.sidebar-container {
+  top: 0;
+  position: sticky;
+  text-align: center;
+  
+  
+  h5 { //side bar colors
+    @include title;
+    color: $gray-dark;
+    // font-weight: lighter;
+    font-size : clamp(20px, 100%, 22px);
+    padding: 0px 50px 0px 0px;
+    a {
+      @include title;
+      color: $gray-dark !important;
+      text-decoration: none;
+    }
+  }
+  a {
+    @include title;
+    color: $gray-dark !important;
+    &:hover,
+    &:active {
+      color: $brand-primary !important;
+    }
+  }
+}
+
+
+@media (max-width: 456px) {
+  .sidebar-container {
+  h5 { 
+    font-size : 12px;
+    padding: 0px 0px 0px 0px ;
+    } 
+  
+    a {
+      font-size : 12px;
+    }
+  }
+  .container-top {
+    width: 30px;
+
+  }
+
+.pubs-container {
+
+  h3 {
+    font-size : 18px;
+  }
+  a{
+    font-size : 18px;
+    }
+  }
+}
+
+
+.pubs-container {
+
+  p {
+    @include title;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    // font-size: 19px;
+    font-size : clamp(14px, 1vw, 20px);
+    color: $gray-dark; //author and journal
+  }
+  .list-inline > li {
+    padding-left: 0px;
+  }
+  h3 {
+    @include title;
+    // font-family: 'Roboto Condensed', sans-serif;
+    font-size : 24px;
+    color: $gray-dark !important;
+    
+  }
+  a{
+    @include title;
+    color: $gray-dark !important; //title of publications
+    &:hover,
+    &:active {
+      color: $brand-primary !important;
+    }
+  }
+  
+  
+}

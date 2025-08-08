@@ -1,0 +1,45 @@
+{{ define "container" }}
+
+
+{{ with .Site.GetPage "/research" }}
+<div class="background-banner">
+  <div class="container">
+    <div style="text-align: center;">
+      <h2>Our Research</h2>
+      <p style="margin-top: 0;">{{ .Params.Shortintro }}</p>
+      <a href="{{ "research/" | relURL }}">
+        <button class="button" style="margin-bottom: 15px;"><strong>Read More</strong></button>
+      </a>
+      <hr class="color">
+
+      {{ $counter := 0 }}
+      {{ $colnum := len .Params.research_areas }}
+      {{ range $area := .Params.research_areas }}
+        {{ if eq (mod $counter 3) 0 }}
+          <div class="row">
+        {{ end }}
+        {{ $counter = add $counter 1 }}
+
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-offset-2 col-xs-8 col-sm-offset-0 col-md-offset-0 col-lg-offset-0">
+          <a href="{{ $area.link | relURL }}" class="text-decoration-none text-dark">
+            <div class="research-box">
+              <img style="width: 40%; filter: brightness(0) invert(0.25);" src="{{ $area.fore_img | relURL }}">
+              <h4 style="margin-top: 20px; margin-bottom: -20px;">{{ $area.name }}</h4>
+              <p style="text-align: center;">{{ $area.brief_description }}</p>
+            </div>
+          </a>
+        </div>
+
+        {{ if eq (mod $counter 3) 0 }}
+          </div>
+        {{ end }}
+      {{ end }}
+    </div>
+  </div>
+</div>
+{{ end }}
+
+
+</div>
+
+{{ end }}
