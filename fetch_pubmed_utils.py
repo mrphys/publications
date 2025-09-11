@@ -5,6 +5,12 @@ import pandas as pd
 from pathlib import Path
 import yaml
 import time
+from datetime import datetime
+
+def name_matches(name, author):
+    name_parts = name.lower().replace('.', '').split()
+    author_parts = author.lower().split()
+    return author_parts[0] in name_parts and author_parts[-1] in name_parts
 
 
 def write_yaml(file_path, content):
@@ -41,9 +47,20 @@ def fetch_pubmed_records(id_list):
     response = requests.get(url, params=params)
     return response.content
 
-def parse_pubmed_xml(xml_data):
+def parse_pubmed_xml(xml_data, author):
     if not xml_data:
         return []
+    
+    affiliations = [
+        "UCL",
+        "University College London",
+        "Great Ormond Street",
+        "Royal Free"
+    ]
+    
+    affil_pattern = r'(?i)(?<!\w)(' + '|'.join(re.escape(a) for a in affiliations) + r')(?!\w)'
+
+
     root = ET.fromstring(xml_data)
     records = []
     for article in root.findall('.//PubmedArticle'):
@@ -55,79 +72,86 @@ def parse_pubmed_xml(xml_data):
                 article_title = pd.NA  # you used np.nan, but pandas NA is cleaner in newer versions
 
             authors = []
-            affiliations = set()
+            names = []
+            affiliations = []
 
-            for author in article.findall('.//AuthorList/Author'):
-                last = author.findtext('LastName')
-                fore = author.findtext('ForeName')
+
+            for author_xml in article.findall('.//AuthorList/Author'):
+                last = author_xml.findtext('LastName')
+                fore = author_xml.findtext('ForeName')
                 if last and fore:
                     authors.append(f"{last} {fore[0]}.")
                 elif last:
                     authors.append(last)
+                full_name = f"{fore} {last}".strip()
+                aff_list = [aff.text for aff in author_xml.findall(".//Affiliation")]
+                full_affiliation = "; ".join(aff_list)
+                
+                names.append(full_name)
+                affiliations.append(full_affiliation)
 
-                # Affiliation (can be multiple)
-                aff_list = author.findall('.//AffiliationInfo/Affiliation')
-                for aff in aff_list:
-                    if aff is not None and aff.text:
-                        affiliations.add(aff.text.strip())
+            df = pd.DataFrame({"Name": names, "Affiliation": affiliations})
 
             authors = ', '.join(authors)
             affiliation_str = '; '.join(affiliations) if affiliations else None
 
-            pub_date_elem = article.find('.//Journal/JournalIssue/PubDate')
-            pub_date_str = None
-            year = None
-            if pub_date_elem is not None:
-                year = pub_date_elem.findtext('Year')
-                medline_date = pub_date_elem.findtext('MedlineDate')
-                month = pub_date_elem.findtext('Month')
-                day = pub_date_elem.findtext('Day')
-                if year:
-                    pub_date_str = year
-                    if month:
-                        pub_date_str += f"-{month}"
-                    if day:
-                        pub_date_str += f"-{day}"
-                elif medline_date:
-                    pub_date_str = medline_date
 
-            doi = None
-            for article_id in article.findall('.//ArticleIdList/ArticleId'):
-                if article_id.attrib.get('IdType') == 'doi':
-                    doi = article_id.text
-                    break
+            mask1 = df['Name'].apply(lambda x: name_matches(x, author))
+            mask2 = df['Affiliation'].astype(str).str.contains(affil_pattern, regex=True, na=False)
 
-            records.append({
-                'Title': article_title,
-                'Journal': journal,
-                'Authors': authors,
-                'Affiliations': affiliation_str,
-                'Year': year,
-                'DOI': doi,
-                'DocumentType': 'Article',
-                'PublicationDate': pub_date_str
-            })
+            df = df.loc[mask1 & mask2]
+            if len(df) >= 1:
+                pub_date_elem = article.find('.//Journal/JournalIssue/PubDate')
+                pub_date_str = None
+                year = None
+                if pub_date_elem is not None:
+                    year = pub_date_elem.findtext('Year')
+                    medline_date = pub_date_elem.findtext('MedlineDate')
+                    month = pub_date_elem.findtext('Month')
+                    day = pub_date_elem.findtext('Day')
+                    if year:
+                        pub_date_str = year
+                        if month:
+                            pub_date_str += f"-{month}"
+                        if day:
+                            pub_date_str += f"-{day}"
+                    elif medline_date:
+                        pub_date_str = medline_date
+
+                doi = None
+                for article_id in article.findall('.//ArticleIdList/ArticleId'):
+                    if article_id.attrib.get('IdType') == 'doi':
+                        doi = article_id.text
+                        break
+
+                records.append({
+                    'Title': article_title,
+                    'Journal': journal,
+                    'Authors': authors,
+                    'Affiliations': affiliation_str,
+                    'Year': year,
+                    'DOI': doi,
+                    'DocumentType': 'Article',
+                    'PublicationDate': pub_date_str
+                })
+
         except Exception:
             continue
 
-    # Convert PublicationDate strings to pandas datetime, coercing errors
-    for r in records:
-        date_str = r['PublicationDate']
-        if date_str:
-            r['PublicationDate'] = pd.to_datetime(date_str, errors='coerce')
-        else:
-            r['PublicationDate'] = pd.NaT
+    if len('records') > 1:
+        for r in records:
+            date_str = r['PublicationDate']
+            if date_str:
+                r['PublicationDate'] = pd.to_datetime(date_str, errors='coerce')
+            else:
+                r['PublicationDate'] = pd.NaT
+    else:
+        records = pd.DataFrame()
     return records
 
 
 
 def create_pubs(authors_list, url, retmax = 200):
-    affiliations = [
-        "UCL",
-        "University College London",
-        "Great Ormond Street",
-        "Royal Free"
-    ]
 
     all_records = []
 
@@ -140,7 +164,7 @@ def create_pubs(authors_list, url, retmax = 200):
                 print(f"No IDs found for {author}")
                 continue
             xml_data = fetch_pubmed_records(ids)
-            records = parse_pubmed_xml(xml_data)
+            records = parse_pubmed_xml(xml_data, author)
             all_records.extend(records)
         except Exception as e:
             print(f"Error processing {author}: {e}")
@@ -149,11 +173,13 @@ def create_pubs(authors_list, url, retmax = 200):
 
     # Convert all records to a DataFrame
 
-    df = pd.DataFrame(all_records).drop_duplicates('Title').sort_values('PublicationDate', ascending=False)
+    current_year = datetime.now().year
 
-    # Create pattern using lookarounds to enforce matching whole phrases
-    affil_pattern = r'(?i)(?<!\w)(' + '|'.join(re.escape(a) for a in affiliations) + r')(?!\w)'
+    df = pd.DataFrame(all_records).drop_duplicates('Title')
 
-    # Filter
-    df = df[df['Affiliations'].astype(str).str.contains(affil_pattern, regex=True, na=False)].dropna()
+    if 'PublicationDate' in df.columns:
+        df = df.sort_values('PublicationDate', ascending=False)
+    df['Year'] = df['Year'].astype('int')
+    df = df.loc[(df['Year']< int(current_year + 1)) & (df['Year'] > 2000)].dropna()
+
     df.to_json(f'data/pubs_{url}.json', orient='records')

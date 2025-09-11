@@ -27,7 +27,7 @@ for department in departments:
     for group, group_url, authors_list in department_df[['group','group_url','authors']].values[:]:
         print(group, group_url)
         authors_list = [name.strip() for name in authors_list.split(',')]
-        create_pubs(authors_list, group_url, retmax=300)
+        create_pubs(authors_list, group_url)
 
 
     # Department folder
@@ -44,6 +44,8 @@ for department in departments:
     # Generate group pages within the department
     for group, group_url, authors in department_df[['group','group_url','authors']].values:
         group_path = f'{dept_path}/{group_url}'
+        pubs_df = pd.read_json(f"data/pubs_{group_url}.json")
+
         md_content = {
             "title": group,
             "date": "2024-10-18T17:04:07+01:00",
@@ -53,7 +55,7 @@ for department in departments:
             "file": f"data/pubs_{group_url}.json",
             "department_url": department_url,
             "department": department,
-            "subtitle": authors.replace(',', ' |').title()
+            # "subtitle": f'Number of Publications = {len(pubs_df)}'
         }
         write_yaml(f"{group_path}/_index.md", md_content)
 
