@@ -23,12 +23,11 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests
+          pip install pandas requests pyyaml
 
       - name: Run fetch script
         run: |
-          chmod +x create_pubs.sh
-          ./create_pubs.sh
+          python make_pages.py
 
       - name: Commit and push updated data
         run: |
