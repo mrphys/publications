@@ -6,6 +6,9 @@ from pathlib import Path
 import yaml
 import time
 from datetime import datetime
+import warnings
+
+warnings.filterwarnings("ignore")
 
 def name_matches(name, author):
     name_parts = name.lower().replace('.', '').split()
