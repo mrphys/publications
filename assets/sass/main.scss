@@ -166,13 +166,47 @@ samp {
 
 // Navigation
 
+
 // materialize, mobile only
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 1024px) {
   /**
    * Layout
    * Since V1.6 we use absolute positioning to prevent to expand container-fluid
    * which would cover tags. A absolute positioning make a new layer.
    */
+
+
+  /* Hux Optimize UserExperience */
+  .navbar-default .navbar-toggle {
+    &:focus,
+    &:hover {
+      background-color: inherit;
+    }
+    &:active {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+  }
+
+  /* Hux customize Style for navBar button */
+
+  .navbar-default .navbar-toggle {
+    border-color: transparent;
+    padding: 19px 16px;
+    margin-top: 2px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+    border-radius: 50%;
+    .icon-bar {
+      width: 18px;
+      border-radius: 0px;
+      // materialize
+      background-color: $offwhite;
+    }
+    .icon-bar + .icon-bar {
+      margin-top: 3px;
+    }
+  }
+
   .navbar-default .navbar-collapse {
     
     position: absolute;
@@ -537,11 +571,7 @@ footer {
 
     h1 {
       margin-top: 40px;
-      font-size: 30px;
-
-      @media only screen and (min-width: 768px) {
-         font-size: clamp(30px, 8vw, 60px);
-      }
+      font-size: clamp(30px, 5vw, 60px);
     }
 
     .subheading {
@@ -621,37 +651,6 @@ img::selection {
 img::-moz-selection {
   color: $offwhite;
   background: transparent;
-}
-
-/* Hux Optimize UserExperience */
-.navbar-default .navbar-toggle {
-  &:focus,
-  &:hover {
-    background-color: inherit;
-  }
-  &:active {
-    background-color: rgba(255, 255, 255, 0.25);
-  }
-}
-
-/* Hux customize Style for navBar button */
-
-.navbar-default .navbar-toggle {
-  border-color: transparent;
-  padding: 19px 16px;
-  margin-top: 2px;
-  margin-right: 2px;
-  margin-bottom: 2px;
-  border-radius: 50%;
-  .icon-bar {
-    width: 18px;
-    border-radius: 0px;
-    // materialize
-    background-color: $offwhite;
-  }
-  .icon-bar + .icon-bar {
-    margin-top: 3px;
-  }
 }
 
 // Hux fullscreen mode in 404.html
@@ -951,3 +950,10 @@ strong{
     display:table;
     text-align:center
 }
+
+
+// .breadcrumb-item.active {
+//   color: $brand-gray;  /* muted gray for active breadcrumb */
+//   pointer-events: none; /* makes it unclickable */
+// }
+

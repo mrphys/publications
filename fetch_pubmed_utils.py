@@ -1,10 +1,19 @@
 import requests
 import xml.etree.ElementTree as ET
-import pandas as pd
 import re
+import pandas as pd
+from pathlib import Path
+import yaml
 import time
-import sys
-import ast  # safer parsing of lists from strings
+
+
+def write_yaml(file_path, content):
+    """Write a dictionary to a YAML file with front matter style."""
+    Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+    with open(file_path, "w") as f:
+        f.write("---\n")
+        yaml.dump(content, f, sort_keys=False)
+        f.write("---\n")
 
 def fetch_pubmed_ids(author, retmax=200):
     url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi'
@@ -22,7 +31,7 @@ def fetch_pubmed_ids(author, retmax=200):
 def fetch_pubmed_records(id_list):
     url = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi'
     if not id_list:
-        return b''
+        return b''  # return empty bytes if no IDs
     ids = ','.join(id_list)
     params = {
         'db': 'pubmed',
@@ -42,8 +51,8 @@ def parse_pubmed_xml(xml_data):
             article_title = article.findtext('.//ArticleTitle')
             journal = article.findtext('.//Journal/Title')
 
-            if article_title and len(article_title) < 4:
-                article_title = pd.NA
+            if len(article_title) < 4:
+                article_title = pd.NA  # you used np.nan, but pandas NA is cleaner in newer versions
 
             authors = []
             affiliations = set()
@@ -56,7 +65,9 @@ def parse_pubmed_xml(xml_data):
                 elif last:
                     authors.append(last)
 
-                for aff in author.findall('.//AffiliationInfo/Affiliation'):
+                # Affiliation (can be multiple)
+                aff_list = author.findall('.//AffiliationInfo/Affiliation')
+                for aff in aff_list:
                     if aff is not None and aff.text:
                         affiliations.add(aff.text.strip())
 
@@ -99,6 +110,7 @@ def parse_pubmed_xml(xml_data):
         except Exception:
             continue
 
+    # Convert PublicationDate strings to pandas datetime, coercing errors
     for r in records:
         date_str = r['PublicationDate']
         if date_str:
@@ -108,35 +120,33 @@ def parse_pubmed_xml(xml_data):
     return records
 
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python script.py \"['Author One', 'Author Two']\" output_name")
-        sys.exit(1)
 
-    # Parse authors list from string safely
-    authors_list = ast.literal_eval(sys.argv[1])
-    filename = sys.argv[2]
-
-    all_records = []
-
-    for author in authors_list:
-        print(f"Processing author: {author}")
-        ids = fetch_pubmed_ids(author, retmax=200)
-        xml_data = fetch_pubmed_records(ids)
-        records = parse_pubmed_xml(xml_data)
-        all_records.extend(records)
-        time.sleep(0.5)
-
-    df = pd.DataFrame(all_records).drop_duplicates('Title').sort_values('PublicationDate', ascending=False)
-
+def create_pubs(authors_list, url, retmax = 200):
     affiliations = [
         "UCL",
         "University College London",
         "Great Ormond Street",
         "Royal Free"
     ]
-    affil_pattern = r'(?i)(?<!\w)(?:' + '|'.join(re.escape(a) for a in affiliations) + r')(?!\w)'
 
-    df = df[df['Affiliations'].astype(str).str.contains(affil_pattern, na=False)].dropna()
+    all_records = []
 
-    df.to_json(f'data/{filename}.json', orient='records')
+    for author in authors_list:
+        print(f"Processing author: {author}")
+
+        ids = fetch_pubmed_ids(author, retmax=retmax)
+        xml_data = fetch_pubmed_records(ids)
+        records = parse_pubmed_xml(xml_data)
+        all_records.extend(records)
+        time.sleep(0.5)  # polite pause to avoid hitting API limits
+
+    # Convert all records to a DataFrame
+
+    df = pd.DataFrame(all_records).drop_duplicates('Title').sort_values('PublicationDate', ascending=False)
+
+    # Create pattern using lookarounds to enforce matching whole phrases
+    affil_pattern = r'(?i)(?<!\w)(' + '|'.join(re.escape(a) for a in affiliations) + r')(?!\w)'
+
+    # Filter
+    df = df[df['Affiliations'].astype(str).str.contains(affil_pattern, regex=True, na=False)].dropna()
+    df.to_json(f'data/pubs_{url}.json', orient='records')

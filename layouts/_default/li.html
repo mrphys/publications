@@ -1,7 +1,11 @@
-<div class="post-preview item" data-tags="{{ with .Params.tags }} {{- delimit  (apply (apply . "lower" ".") "urlquery" ".") "," -}} {{ end }}">
+<div class="post-preview item" data-tags="{{ with .Params.tags }} {{- delimit  (apply (apply . "lower" ".") "urlquery" ".") "," -}} {{ end }}" style="padding-bottom: 0.5em;">
   <a href="{{ .RelPermalink }}">
-      <h2 class="post-title">{{ .Title }}</h2>
-      <h3 class="post-subtitle">{{ .Params.subtitle }}</h3>
+      <h4 class="post-title">{{ .Title }}</h4>
+      {{ with .Page.Params.subtitle }}
+        <p class="post-subtitle" style="font-size: 0.8em; margin-bottom: 0.5em; margin-top: 0.5em;">
+          {{ . }}
+        </p>
+      {{ end }}
   </a>
-<hr>
+  <hr>
 </div>
