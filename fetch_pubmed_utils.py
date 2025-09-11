@@ -183,7 +183,10 @@ def create_pubs(authors_list, url, retmax = 200):
     if 'PublicationDate' in df.columns:
         df = df.sort_values('PublicationDate', ascending=False)
     df = df.dropna()
-    df['Year'] = df['Year'].astype('int')
+    df['Year'] = pd.to_numeric(df['Year'], errors='coerce')  # converts invalid/missing to NaN
+    df = df.dropna(subset=['Year'])
+    df['Year'] = df['Year'].astype(int)
+
     df = df.loc[(df['Year']< int(current_year + 1)) & (df['Year'] > 2000)]
 
     df.to_json(f'data/pubs_{url}.json', orient='records')

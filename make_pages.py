@@ -20,11 +20,11 @@ config = {
 
 
 # Generate department pages
-for department in departments:
+for department in departments[:]:
     department_df = df[df['department'] == department]
     department_url = department_df['department_url'].values[0]
 
-    for group, group_url, authors_list in department_df[['group','group_url','authors']].values[:]:
+    for group, group_url, authors_list in department_df[['group','group_url','authors']].values:
         print(group, group_url)
         authors_list = [name.strip() for name in authors_list.split(',')]
         create_pubs(authors_list, group_url)

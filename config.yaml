@@ -3,9 +3,63 @@ baseURL: https://ti-yao.github.io/publications/
 title: Institute of Cardiovascular Science
 menu:
   main:
+  - identifier: hatter
+    name: 'The Hatter Cardiovascular Institute '
+    url: /preclinical/hatter
+  - identifier: surgery
+    name: 'Cardiovascular Surgery '
+    url: /preclinical/surgery
+  - identifier: pharmacology
+    name: 'Cardiovascular Physiology and Pharmacology '
+    url: /preclinical/pharmacology
+  - identifier: frankel
+    name: Frankel Lab
+    url: /preclinical/frankel
+  - identifier: gene
+    name: 'Functional Gene Annotation '
+    url: /preclinical/gene
+  - identifier: biology
+    name: 'Molecular Biology Development and Disease '
+    url: /preclinical/biology
+  - identifier: genomics
+    name: 'Centre for Translational Genomics  '
+    url: /population/genomics
+  - identifier: ageing
+    name: Unit for Lifelong Health and Ageing
+    url: /population/ageing
+  - identifier: multimorbidity
+    name: Multimorbidity Mechanisms and Therapeutics Research Collaborative
+    url: /population/multimorbidity
+  - identifier: phenotyping
+    name: 'Bloomsbury Centre for Clinical Phenotyping '
+    url: /population/phenotyping
+  - identifier: muscle
+    name: Centre for Heart Muscle Disease
+    url: /clinical/muscle
+  - identifier: electrophysiology
+    name: Centre for Translational Electrophysiology and Data Science
+    url: /clinical/electrophysiology
+  - identifier: imaging
+    name: Centre for Cardiovascular Disease Imaging
+    url: /clinical/imaging
+  - identifier: translational
+    name: Translational Cardiovascular Imaging
+    url: /childrens/translational
+  - identifier: outcomes
+    name: Outcomes in Paediatric Critical Illness and Cardiovascular Disease
+    url: /childrens/outcomes
+  - identifier: disease
+    name: Paediatric Inherited and Rare Cardiovascular Disease
+    url: /childrens/disease
+  - identifier: support
+    name: Heart Failure, Transplantation and Extracorporeal Support
+    url: /childrens/support
   - identifier: morphology
     name: Morphology and Structural Heart Disease
     url: /childrens/morphology
+  - identifier: engineering
+    name: Clinical Cardiovascular Engineering
+    url: /childrens/engineering
 params:
   description: ''
   img_home: img/publications.jpg
