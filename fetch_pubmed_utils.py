@@ -133,12 +133,12 @@ def create_pubs(authors_list, url, retmax = 200):
 
     for author in authors_list:
         print(f"Processing author: {author}")
-
+        time.sleep(1)  
         ids = fetch_pubmed_ids(author, retmax=retmax)
         xml_data = fetch_pubmed_records(ids)
         records = parse_pubmed_xml(xml_data)
         all_records.extend(records)
-        time.sleep(0.5)  # polite pause to avoid hitting API limits
+        time.sleep(1) 
 
     # Convert all records to a DataFrame
 
