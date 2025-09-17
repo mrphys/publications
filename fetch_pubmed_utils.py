@@ -7,6 +7,7 @@ import yaml
 import time
 from datetime import datetime
 import warnings
+import shutil
 
 warnings.filterwarnings("ignore")
 
@@ -18,7 +19,11 @@ def name_matches(name, author):
 
 def write_yaml(file_path, content):
     """Write a dictionary to a YAML file with front matter style."""
-    Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+    p = Path(file_path).parent
+    if p.exists():
+        shutil.rmtree(p)
+
+    p.mkdir(parents=True, exist_ok=True)
     with open(file_path, "w") as f:
         f.write("---\n")
         yaml.dump(content, f, sort_keys=False)

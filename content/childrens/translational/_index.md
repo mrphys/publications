@@ -1,5 +1,5 @@
 ---
-title: Translational Cardiovascular Imaging
+title: Centre for Translational Cardiovascular Imaging
 date: '2024-10-18T17:04:07+01:00'
 draft: false
 layout: publication

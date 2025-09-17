@@ -7,19 +7,19 @@ menu:
     name: 'The Hatter Cardiovascular Institute '
     url: /preclinical/hatter
   - identifier: surgery
-    name: 'Cardiovascular Surgery '
+    name: 'Centre for Cardiovascular Surgery '
     url: /preclinical/surgery
   - identifier: pharmacology
-    name: 'Cardiovascular Physiology and Pharmacology '
+    name: 'Centre for Cardiovascular Physiology and Pharmacology '
     url: /preclinical/pharmacology
   - identifier: frankel
     name: Frankel Lab
     url: /preclinical/frankel
   - identifier: gene
-    name: 'Functional Gene Annotation '
+    name: 'Centre for Functional Gene Annotation '
     url: /preclinical/gene
   - identifier: biology
-    name: 'Molecular Biology Development and Disease '
+    name: 'Centre for Molecular Biology Development and Disease '
     url: /preclinical/biology
   - identifier: genomics
     name: 'Centre for Translational Genomics  '
@@ -43,22 +43,22 @@ menu:
     name: Centre for Cardiovascular Disease Imaging
     url: /clinical/imaging
   - identifier: translational
-    name: Translational Cardiovascular Imaging
+    name: Centre for Translational Cardiovascular Imaging
     url: /childrens/translational
   - identifier: outcomes
-    name: Outcomes in Paediatric Critical Illness and Cardiovascular Disease
+    name: Centre for Outcomes in Paediatric Critical Illness and Cardiovascular Disease
     url: /childrens/outcomes
   - identifier: disease
-    name: Paediatric Inherited and Rare Cardiovascular Disease
+    name: Centre for Paediatric Inherited and Rare Cardiovascular Disease
     url: /childrens/disease
   - identifier: support
-    name: Heart Failure, Transplantation and Extracorporeal Support
+    name: Centre for Heart Failure, Transplantation and Extracorporeal Support
     url: /childrens/support
   - identifier: morphology
-    name: Morphology and Structural Heart Disease
+    name: Centre for Morphology and Structural Heart Disease
     url: /childrens/morphology
   - identifier: engineering
-    name: Clinical Cardiovascular Engineering
+    name: Centre for Clinical Cardiovascular Engineering
     url: /childrens/engineering
 params:
   description: ''
