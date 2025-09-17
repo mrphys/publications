@@ -19,11 +19,7 @@ def name_matches(name, author):
 
 def write_yaml(file_path, content):
     """Write a dictionary to a YAML file with front matter style."""
-    p = Path(file_path).parent
-    if p.exists():
-        shutil.rmtree(p)
-
-    p.mkdir(parents=True, exist_ok=True)
+    Path(file_path).parent.mkdir(parents=True, exist_ok=True)
     with open(file_path, "w") as f:
         f.write("---\n")
         yaml.dump(content, f, sort_keys=False)
